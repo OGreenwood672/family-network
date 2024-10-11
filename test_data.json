@@ -1,0 +1,14 @@
+{
+    "og314": {
+        "married": ["jp2060"],
+        "parents": ["mw465", "pl901"]
+    },
+    "mw465": {
+        "married": ["pl901"],
+        "parents": []
+    },
+    "pl901": {
+        "married": ["mw465"],
+        "parents": []
+    }
+}

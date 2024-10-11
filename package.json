@@ -1,0 +1,11 @@
+{
+  "name": "familynetwork",
+  "version": "1.0.0",
+  "description": "Generates an HTML Canvas showing a family tree with nodes and lines",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "OGreenwood672",
+  "license": "ISC"
+}

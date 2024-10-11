@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Family Network Test</title>
+</head>
+<body>
+    <script src="index.js"></script>
+
+    <script>
+        let data = {
+            "og314": {
+                "married": ["jp2060"],
+                "parents": ["mw465", "pl901"]
+            },
+            "mw465": {
+                "married": ["pl901"],
+                "parents": []
+            },
+            "pl901": {
+                "married": ["mw465"],
+                "parents": []
+            }
+        }
+
+        // Define the primary CSRID
+        const primary_csrd = 'og314';
+
+        // Create an instance of FamilyNetwork
+        const familyNetwork = new FamilyNetwork(800, 400, data, primary_csrd);
+
+        // Set background color
+        familyNetwork.setBackgroundColor('gray');
+
+        familyNetwork.calculateNodes();
+        familyNetwork.drawNodes();
+
+    </script>
+</body>
+</html>
