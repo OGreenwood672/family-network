@@ -40,12 +40,8 @@ class FamilyNetwork {
         this.primary = primary_csrd;
         this.nodes = {}
 
-        this.R = 30;
-        this.MARRIAGE_BUFFER = this.R * 2;
-        this.HORIZONTAL_BUFFER = this.R * 3;
-        this.VERTICAL_BUFFER = this.R * 4;
-        
-
+        this.R = 23;
+    
         if (!this.primary in Object.keys(this.data)) {
             throw Error("Primary CSRID not found in the data")
         }
@@ -95,23 +91,22 @@ class FamilyNetwork {
     drawNode(csrid, x, y, r, color = 'black') {
         x += this.canvas.width / 2;
         y += this.canvas.height / 2;
-        console.log(x, y);
-        console.log(this.canvas.width, this.canvas.height);
         this.ctx.beginPath();  // Start a new path for the node
         this.ctx.arc(x, y, r, 0, Math.PI * 2);  // Draw a circle at (x, y) with radius r
-        this.ctx.fillStyle = color;  // Set the fill color
-        this.ctx.fill();  // Fill the circle with the specified color
-        this.ctx.closePath();  // Close the path
+        this.ctx.strokeStyle = color;  // Set the border color
+        this.ctx.lineWidth = 3;  // Set the border width
+        this.ctx.stroke();  // Draw the border (outline) of the circle
+        this.ctx.closePath();
         this.drawText(csrid, x, y);
     }
 
-    drawText(text, x, y, font = '16px Arial', color = 'black') {
+    drawText(text, x, y, font = '12px Arial', color = 'black') {
         this.ctx.font = font;            // Set the font style and size
         this.ctx.fillStyle = color;      // Set the fill color
         this.ctx.textAlign = 'center';   // Align the text in the center
         this.ctx.textBaseline = 'middle'; // Vertically align the text in the middle
         this.ctx.fillText(text, x, y);   // Draw filled text at (x, y)
-      }
+    }
 
     // Method to resize the canvas
     resize(width, height) {
@@ -119,11 +114,63 @@ class FamilyNetwork {
       this.canvas.height = height;
     }
 
-    calculateNodes() {
-        let rows = [(0, 0)]; // [(left, right)]
+    calculateNodes() { // Get parent node and work down
+        let rows = {
+            0: [0, 0]
+        }
 
         this.nodes = {};
-        this.nodes[this.primary] = [0, 0];
+        // this.nodes[this.primary] = [0, 0];
+        let queue = [[this.primary, 0]];
+        let visited = [];
+
+        const MARRIAGE_BUFFER = this.R * 3;
+        const HORIZONTAL_BUFFER = this.R * 5;
+        const VERTICAL_BUFFER = this.R * 4;
+
+        while (queue.length > 0) {
+
+            let [curr, depth] = queue.shift();
+
+            if (visited.includes(curr)) {
+                continue;
+            }
+            visited.push(curr); // Mark node as visited
+
+            if (!Object.keys(rows).includes(depth)) {
+                rows[depth] = [0, 0];
+            }
+
+            let y = depth * VERTICAL_BUFFER;
+
+            let min_index = rows[depth].indexOf(Math.min(...rows[depth]));
+            let x = Math.min(...rows[depth]) + (min_index * 2 - 1) * HORIZONTAL_BUFFER;
+
+            if (visited.length == 1) {
+                x = 0;
+            } else {
+                rows[depth][min_index] = Math.abs(x);
+            }
+
+            this.nodes[curr] = [x, y];
+
+            let curr_conn = this.data[curr];
+            let partners = curr_conn["married"];
+
+            partners.forEach((elem) => {
+                x = rows[depth][min_index] + (min_index * 2 - 1) * MARRIAGE_BUFFER;
+                rows[depth][min_index] = Math.abs(x);
+                this.nodes[elem] = [x, y];
+            })
+
+            let children = curr_conn["children"];
+            children.forEach((child) => {
+                queue.push([child, depth + 1])
+            })
+
+        }
+
+        console.log(this.nodes)
 
 
     }

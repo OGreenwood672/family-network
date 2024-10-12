@@ -12,15 +12,23 @@
         let data = {
             "og314": {
                 "married": ["jp2060"],
-                "parents": ["mw465", "pl901"]
+                "parents": ["mw465", "pl901"],
+                "children": ["rl827"]
+            },
+            "rl827": {
+                "married": ["bob", "hag"],
+                "parents": ["og314"],
+                "children": []
             },
             "mw465": {
                 "married": ["pl901"],
-                "parents": []
+                "parents": [],
+                "children": ["og314"]
             },
             "pl901": {
                 "married": ["mw465"],
-                "parents": []
+                "parents": [],
+                "children": ["og314"]
             }
         }
 
@@ -28,7 +36,7 @@
         const primary_csrd = 'og314';
 
         // Create an instance of FamilyNetwork
-        const familyNetwork = new FamilyNetwork(800, 400, data, primary_csrd);
+        const familyNetwork = new FamilyNetwork(window.innerWidth * 0.99, window.innerHeight * 0.98, data, primary_csrd);
 
         // Set background color
         familyNetwork.setBackgroundColor('gray');
